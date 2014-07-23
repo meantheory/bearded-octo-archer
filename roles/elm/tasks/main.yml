@@ -1,0 +1,17 @@
+---
+
+- name: install haskell
+  apt: name=haskell-platform state=present update_cache=yes
+  sudo: true
+
+- name: install libncurses5-dev
+  apt: name=libncurses5-dev state=present
+  sudo: true
+
+- name: update cabal
+  command: cabal update
+  sudo: true
+
+- name: install elm
+  command: cabal install --global elm elm-server elm-repl elm-get creates=/usr/bin/elm-repl
+  sudo: true
