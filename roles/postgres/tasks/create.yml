@@ -1,0 +1,10 @@
+---
+
+#:>>> MAKE AND CONFIGURE DATABASE
+- name: create database
+  postgresql_db: name={{ dbname }} encoding='UTF-8'
+  sudo_user: postgres
+
+- name: create database user
+  postgresql_user: name={{ dbname }} db={{ dbname }} role_attr_flags=SUPERUSER password={{ dbpasswd }}
+  sudo_user: postgres

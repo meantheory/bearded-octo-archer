@@ -1,0 +1,51 @@
+---
+
+- name: ensure apt cache is up to date
+  apt: update_cache=yes
+  sudo: true
+
+#:>>> INSTALL POSTGRES
+- name: add postgresql repository key
+  apt_key: url=http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc state=present
+  sudo: true
+
+- name: add postgresql repository
+  apt_repository: state=present repo='deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release}}-pgdg main {{ pg_version }}'
+  sudo: true
+
+- name: install postgresql
+  apt: name=postgresql-{{ pg_version }} state=present update_cache=yes
+  sudo: true
+
+- name: install postgresql client
+  apt: name=postgresql-client-{{ pg_version }} state=present
+  sudo: true
+
+- name: install postgresql dev
+  apt: name=postgresql-server-dev-{{ pg_version }} state=present
+  sudo: true
+
+#:>>> INSTALL PSYCOPG2
+- name: install python-dev
+  apt: name=python-dev state=present
+  sudo: true
+
+- name: install python-pip
+  apt: name=python-pip state=present
+  sudo: true
+
+- name: install psycopg2 for database work
+  pip: name=psycopg2 state=present
+  sudo: true
+
+- name: set pg_hba.conf
+  copy: src=pg_hba.conf dest=/etc/postgresql/9.4/main/ backup=yes
+  sudo_user: postgres
+  notify: restart postgresql
+
+- include: create.yml
+  when: db_create
+
+- name: ensure postgresql server is started
+  service: name=postgresql state=started enabled=yes arguments={{ pg_version }} pattern="/{{ pg_version }}/.*/postgres"
+  sudo: true

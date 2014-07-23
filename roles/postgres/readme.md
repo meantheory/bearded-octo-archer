@@ -1,7 +1,7 @@
 
 # Postgres
 
-Notes 
+Notes
 
 # Derivation
 
