@@ -1,0 +1,4 @@
+---
+# default vars file for zsh
+system_user: 'vagrant'
+zsh_theme: 'ys'
