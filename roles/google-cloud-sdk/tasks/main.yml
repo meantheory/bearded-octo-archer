@@ -1,0 +1,12 @@
+#:>>> Install Google Cloud SDK
+- name: Download Cloud SDK
+  get_url: url=https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz dest=/home/{{system_user}}/gcsdk.tar.gz
+
+- name: Unarchive Cloud SDK
+  unarchive: src=/home/{{system_user}}/gcsdk.tar.gz dest=/home/{{system_user}}/ copy=no
+
+- name: Run Cloud SDK Installer
+  command: python /home/{{system_user}}/google-cloud-sdk/bin/bootstrapping/install.py --usage-reporting=false --disable-installation-options --bash-completion=false --path-update=false --rc-path /home/{{system_user}}/.bashrc
+  args:
+    creates: /home/{{system_user}}/google-cloud-sdk/bin/gcloud
+    chdir: /home/{{system_user}}/google-cloud-sdk/
