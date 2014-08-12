@@ -3,3 +3,4 @@
 system_user: 'vagrant'
 zsh_theme: 'ys'
 workon_home: '~/pythonenv'
+google_cloud_sdk: True
