@@ -1,4 +1,7 @@
 #:>>> CONFIGURE ENVIRONMENT SHELL
+- name: create pythonenv home
+  file: path={{workon_home}} state=directory
+
 - name: install git
   apt: name=git state=present
 
