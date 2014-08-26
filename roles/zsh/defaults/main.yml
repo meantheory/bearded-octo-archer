@@ -2,7 +2,7 @@
 # default vars file for zsh
 system_user: 'vagrant'
 zsh_theme: 'ys'
-google_cloud_sdk: True
+google_cloud_sdk: False
 
-virtualenv: True
+virtualenv: False
 workon_home: '~/pythonenv'
