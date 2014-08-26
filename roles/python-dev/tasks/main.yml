@@ -1,0 +1,13 @@
+#:>>> INSTALL Python Dev Tools
+
+- name: install python-dev
+  apt: name=python-dev state=present
+
+- name: install pip
+  apt: name=python-pip state=present
+
+- name: install virtualenv
+  pip: name=virtualenv state=present
+
+- name: install virtualenv wrapper
+  pip: name=virtualenvwrapper state=present
