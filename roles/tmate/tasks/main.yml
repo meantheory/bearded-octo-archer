@@ -1,0 +1,16 @@
+---
+
+- name: add tmate repository
+  apt_repository: state=present repo='ppa:nviennot/tmate'
+  sudo: true
+  when: is_dev_environment
+
+- name: install tmate
+  apt: name=tmate state=present update_cache=yes
+  sudo: true
+  when: is_dev_environment
+
+- name: ssh-keygen
+  command: ssh-keygen -f /home/{{ system_user }}/.ssh/id_rsa -N ""
+  args:
+    creates: '/home/{{ system_user }}/.ssh/id_rsa'
