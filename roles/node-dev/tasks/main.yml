@@ -1,7 +1,7 @@
 #:>>> INSTALL Node Dev Tools
 
 - name: install node package manager (npm)
-  apt: name=npm state=present
+  apt: name=npm state=present update_cache=yes
   sudo: True
 
 - name: gulp it up
