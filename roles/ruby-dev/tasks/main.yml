@@ -1,0 +1,9 @@
+#:>>> INSTALL Python Dev Tools
+
+- name: install ruby-dev
+  apt: name=ruby-dev state=present
+  sudo: True
+
+- name: install bundler
+  gem: name=bundler state=present
+  sudo: True
