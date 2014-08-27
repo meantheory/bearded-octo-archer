@@ -1,0 +1,5 @@
+---
+is_dev_environment: False
+github_dotfiles_repo: mjs2600/dot_files
+setup_script: dots.py
+system_user: vagrant

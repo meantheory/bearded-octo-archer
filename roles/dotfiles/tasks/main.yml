@@ -1,0 +1,18 @@
+---
+
+- name: install silver searcher
+  apt: name=silversearcher-ag state=present update_cache=yes
+  sudo: true
+  when: is_dev_environment
+
+- name: install ctags
+  apt: name=ctags state=present
+  sudo: true
+  when: is_dev_environment
+
+- name: clone dot files repository
+  git: repo=git://github.com/{{ github_dotfiles_repo }}.git dest=/home/{{ system_user }}/dot_files
+  when: is_dev_environment
+
+- name: run dot file setup script
+  command: /home/{{ system_user }}/dot_files/{{ setup_script }}
