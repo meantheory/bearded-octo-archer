@@ -5,5 +5,9 @@
   sudo: True
 
 - name: install bundler
-  gem: name=bundler state=present
+  command: /usr/bin/gem install --no-user-install bundler
+  # for reasons unknow the below passes successfully but does
+  # not install bundle into any place I can currently identify.
+  # look into more and fix.
+  # gem: name=bundler state=present user_install=no
   sudo: True
