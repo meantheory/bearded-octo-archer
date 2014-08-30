@@ -6,3 +6,5 @@ google_cloud_sdk: False
 
 virtualenv: False
 workon_home: '~/pythonenv'
+go_to_start: False
+start_dir: /vagrant
