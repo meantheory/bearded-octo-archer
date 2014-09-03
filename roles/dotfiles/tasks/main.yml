@@ -11,8 +11,11 @@
   when: is_dev_environment
 
 - name: clone dot files repository
-  git: repo=git://github.com/{{ github_dotfiles_repo }}.git dest=/home/{{ system_user }}/dot_files
+  git: repo=git://github.com/{{ dotfiles_github_repo }}.git dest={{ dotfiles_dest }} update=yes
+  sudo: true
   when: is_dev_environment
 
 - name: run dot file setup script
-  command: /home/{{ system_user }}/dot_files/{{ setup_script }}
+  command: /usr/bin/python {{ dotfiles_setup_script }} {{ dotfiles_dest }} {{ system_home }}
+  sudo: true
+  when: is_dev_environment

@@ -1,6 +1,7 @@
 #:>>> CONFIGURE ENVIRONMENT SHELL
 - name: create pythonenv home
-  file: path={{workon_home}} state=directory
+  file: path={{zsh_workon_home}} state=directory
+  when: zsh_virtualenv
 
 - name: install git
   apt: name=git state=present
@@ -12,7 +13,7 @@
   command: chsh -s /usr/bin/zsh {{system_user}}
 
 - name: clone git oh-my-zsh repository
-  git: repo=git://github.com/robbyrussell/oh-my-zsh.git dest=/home/{{ system_user }}/.oh-my-zsh accept_hostkey=yes
+  git: repo=git://github.com/robbyrussell/oh-my-zsh.git dest=/home/{{ system_user }}/.oh-my-zsh accept_hostkey=yes update=no
 
 - name: copy zsh config
   template: src=zsh.config dest=/home/{{ system_user }}/.zshrc owner={{ system_user }} group={{ system_user }} mode=0640
