@@ -10,7 +10,8 @@
       system_user: vagrant
       zsh_theme: ys
       is_dev_environment: True
-      zsh_go_to_start: True
+      zsh_go_to_start: False
+      dotfiles_github_repo: "meantheory/dot_files"
     roles:
     #   - postgres
       - zsh
