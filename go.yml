@@ -15,7 +15,7 @@
     roles:
     #   - postgres
       - zsh
-    #   - tmate
+      - tmate
       - dotfiles
     #   - ruby-dev
     #   - node-dev

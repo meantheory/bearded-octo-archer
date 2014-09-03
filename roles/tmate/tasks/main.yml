@@ -11,6 +11,7 @@
   when: is_dev_environment
 
 - name: ssh-keygen
-  command: ssh-keygen -f /home/{{ system_user }}/.ssh/id_rsa -N ""
+  command: ssh-keygen -t rsa -f "{{ tmate_key_file }}" -N ''
+  sudo_user: "{{ system_user }}"
   args:
-    creates: '/home/{{ system_user }}/.ssh/id_rsa'
+    creates: "{{ tmate_key_file}}"

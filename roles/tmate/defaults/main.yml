@@ -1,3 +1,6 @@
 ---
 is_dev_environment: False
 system_user: vagrant
+system_home: '/home/{{ system_user }}'
+
+tmate_key_file: '/home/{{ system_user }}/.ssh/id_rsa'
