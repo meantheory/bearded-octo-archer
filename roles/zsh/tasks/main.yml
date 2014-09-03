@@ -13,7 +13,7 @@
   command: chsh -s /usr/bin/zsh {{system_user}}
 
 - name: clone git oh-my-zsh repository
-  git: repo=git://github.com/robbyrussell/oh-my-zsh.git dest=/home/{{ system_user }}/.oh-my-zsh update=no
+  git: repo=git://github.com/robbyrussell/oh-my-zsh.git dest=/home/{{ system_user }}/.oh-my-zsh accept_hostkey=yes update=no
 
 - name: copy zsh config
   template: src=zsh.config dest=/home/{{ system_user }}/.zshrc owner={{ system_user }} group={{ system_user }} mode=0640
