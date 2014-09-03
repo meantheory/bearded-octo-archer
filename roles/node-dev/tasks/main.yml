@@ -6,3 +6,6 @@
 
 - name: gulp it up
   npm: name=gulp state=present global=yes
+
+- name: symlink nodejs to node
+  file: src=/usr/bin/nodejs dest=/usr/local/bin/node state=link
