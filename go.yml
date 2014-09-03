@@ -1,0 +1,58 @@
+---
+
+  - hosts: all
+    sudo: True
+    vars:
+      pg_version: 9.4
+      db_create: True
+      dbname: hoarder
+      dbpasswd: notsecure
+      system_user: vagrant
+      zsh_theme: ys
+      is_dev_environment: True
+      zsh_go_to_start: True
+    roles:
+    #   - postgres
+      - zsh
+    #   - tmate
+      - dotfiles
+    #   - ruby-dev
+    #   - node-dev
+
+    tasks:
+
+    #:>>> SET HOSTNAME
+      - name: set host name
+        hostname: name=bearded
+
+    # #:>>> Python 3
+    #   - name: install python3-dev
+    #     apt: name=python3-dev state=present
+    #
+    #   - name: download pip installer
+    #     get_url: url=https://bootstrap.pypa.io/get-pip.py dest=/home/vagrant/get-pip.py
+    #
+    #   - name: install pip for python3
+    #     command: python3 /home/vagrant/get-pip.py creates=/usr/local/bin/pip3
+    #
+    #
+    # #:>>> MAIN APPLICATION PYTHON REQUIREMENTS
+    #   - name: install python requirements.txt
+    #     pip: requirements=/vagrant/requirements.txt executable=/usr/local/bin/pip3
+    #
+    #   - name: install ruby requirements from Gemfile
+    #     command: /usr/local/bin/bundle --binstubs
+    #     args:
+    #       chdir: /vagrant
+    #     sudo_user: "{{ system_user }}"
+    #
+    #   - name: Install NPM from package.json
+    #     npm: path=/vagrant
+    #
+    #   # glam install - possible replace with something else
+    #   - name: glam install
+    #     pip: name=git+https://github.com/meantheory/glam.git#egg=glam state=present
+
+
+# - name: make log directory
+#   command: mkdir /home/vagrant/logs creates=/home/vagrant/logs

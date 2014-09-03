@@ -1,10 +1,17 @@
 ---
-# default vars file for zsh
+# basic
 system_user: 'vagrant'
-zsh_theme: 'ys'
-google_cloud_sdk: False
 
-virtualenv: False
-workon_home: '~/pythonenv'
-go_to_start: False
-start_dir: /vagrant
+# oh my zsh variable
+zsh_theme: 'ys'
+
+# python virtualenv
+zsh_virtualenv: False
+zsh_workon_home: '~/pythonenv'
+
+# variables for setting start directory
+zsh_go_to_start: False
+zsh_start_dir: /vagrant
+
+# google cloud sdk
+zsh_google_cloud_sdk: False
