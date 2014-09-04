@@ -1,8 +1,10 @@
 
 - name: create pythonenv home
   file: path={{ python_venv_home }} state=directory
+  sudo_user: "{{ system_user }}"
 
 - name: make virtualenv
   command: /usr/local/bin/virtualenv {{ python_venv_name }} creates={{python_venv_exe}}
+  sudo_user: "{{ system_user }}"
   args:
       chdir: "{{ python_venv_home }}"

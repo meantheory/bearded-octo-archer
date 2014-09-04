@@ -25,17 +25,8 @@
   apt: name=postgresql-server-dev-{{ pg_version }} state=present
   sudo: true
 
-#:>>> INSTALL PSYCOPG2
-- name: install python-dev
-  apt: name=python-dev state=present
-  sudo: true
-
-- name: install python-pip
-  apt: name=python-pip state=present
-  sudo: true
-
-- name: install psycopg2 for database work
-  pip: name=psycopg2 state=present
+- name: install psycopg2 for database management
+  apt: name=python-psycopg2 state=present
   sudo: true
 
 - name: set pg_hba.conf

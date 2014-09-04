@@ -10,3 +10,4 @@ python_venv_name: main
 python_venv_home: "/home/{{ system_user }}/pythonenv"
 python_venv_exe: "{{ python_venv_home }}/{{ python_venv_name }}/bin/python"
 python_venv_activate: "{{ python_venv_home }}/{{ python_venv_name }}/bin/activate"
+python_venv_pip: "{{ python_venv_home }}/{{ python_venv_name }}/bin/pip"
