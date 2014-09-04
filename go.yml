@@ -11,7 +11,7 @@
       zsh_theme: ys
       is_dev_environment: True
       zsh_go_to_start: False
-      dotfiles_github_repo: "meantheory/dot_files"
+      dotfiles_github_repo: "mjs2600/dot_files"
     roles:
       - postgres
       - zsh
