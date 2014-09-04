@@ -13,7 +13,7 @@
       zsh_go_to_start: False
       dotfiles_github_repo: "meantheory/dot_files"
     roles:
-    #   - postgres
+      - postgres
       - zsh
       - tmate
       - dotfiles

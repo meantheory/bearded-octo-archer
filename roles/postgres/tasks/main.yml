@@ -39,7 +39,7 @@
   sudo: true
 
 - name: set pg_hba.conf
-  copy: src=pg_hba.conf dest=/etc/postgresql/9.4/main/ backup=yes
+  template: src=pg_hba.conf dest=/etc/postgresql/9.4/main/ backup=yes
   sudo_user: postgres
   notify: restart postgresql
 
