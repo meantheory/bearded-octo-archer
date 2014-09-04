@@ -1,6 +1,7 @@
 ---
 # basic
 system_user: 'vagrant'
+system_home: '/home/{{ system_user}}'
 
 # oh my zsh variable
 zsh_theme: 'ys'
