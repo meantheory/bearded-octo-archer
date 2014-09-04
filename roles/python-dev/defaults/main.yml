@@ -1,5 +1,12 @@
 ---
 # default vars file for zsh
 system_user: 'vagrant'
-zsh_theme: 'ys'
-workon_home: '~/pythonenv'
+
+
+python2: False
+python3: False
+python_mkvirtualenv: False
+python_venv_name: main
+python_venv_home: "/home/{{ system_user }}/pythonenv"
+python_venv_exe: "{{ python_venv_home }}/{{ python_venv_name }}/bin/python"
+python_venv_activate: "{{ python_venv_home }}/{{ python_venv_name }}/bin/activate"

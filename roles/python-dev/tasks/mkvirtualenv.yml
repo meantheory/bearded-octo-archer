@@ -1,0 +1,8 @@
+
+- name: create pythonenv home
+  file: path={{ python_venv_home }} state=directory
+
+- name: make virtualenv
+  command: /usr/local/bin/virtualenv {{ python_venv_name }} creates={{python_venv_exe}}
+  args:
+      chdir: "{{ python_venv_home }}"

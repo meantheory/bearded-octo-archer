@@ -1,13 +1,10 @@
-#:>>> INSTALL Python Dev Tools
+#:>>> python
 
-- name: install python-dev
-  apt: name=python-dev state=present
+- include: python2.yml
+  when: python2
 
-- name: install pip
-  apt: name=python-pip state=present
+- include: python3.yml
+  when: python3
 
-- name: install virtualenv
-  pip: name=virtualenv state=present
-
-- name: install virtualenv wrapper
-  pip: name=virtualenvwrapper state=present
+- include: mkvirtualenv.yml
+  when: python_mkvirtualenv

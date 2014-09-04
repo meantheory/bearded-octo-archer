@@ -1,0 +1,14 @@
+- name: install python3-dev
+  apt: name=python3-dev state=present
+
+- name: install pip 3
+  apt: name=python3-pip state=present
+
+- name: install virtualenv
+  pip: name=virtualenv state=present executable=/usr/bin/pip3
+
+- name: symlink python3 to python
+  file: src=/usr/bin/python3 dest=/usr/local/bin/python state=link
+
+- name: symlink pip3 to pip
+  file: src=/usr/bin/pip3 dest=/usr/local/bin/pip state=link
