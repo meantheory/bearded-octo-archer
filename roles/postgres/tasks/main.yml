@@ -25,6 +25,10 @@
   apt: name=postgresql-server-dev-{{ pg_version }} state=present
   sudo: true
 
+- name: install postgresql contrib
+  apt: name=postgresql-contrib-{{ pg_version }} state=present
+  sudo: true
+
 - name: install psycopg2 for database management
   apt: name=python-psycopg2 state=present
   sudo: true
