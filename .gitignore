@@ -1,3 +1,5 @@
+
+roles/*.*/
 dist
 cabal-dev
 *.o
