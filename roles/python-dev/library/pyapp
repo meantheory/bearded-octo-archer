@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 #
+# THIS FILE DERIVED FROM: https://github.com/ansible/ansible/blob/devel/library/packaging/pip
 
 import tempfile
 import os
@@ -63,35 +64,8 @@ author: Matt Wright
 '''
 
 EXAMPLES = '''
-# Install (Bottle) python package.
-- pip: name=bottle
-
-# Install (Bottle) python package on version 0.11.
-- pip: name=bottle version=0.11
-
-# Install (MyApp) using one of the remote protocols (bzr+,hg+,git+,svn+). You do not have to supply '-e' option in extra_args.
-- pip: name='svn+http://myrepo/svn/MyApp#egg=MyApp'
-
-# Install (Bottle) into the specified (virtualenv), inheriting none of the globally installed modules
-- pip: name=bottle virtualenv=/my_app/venv
-
-# Install (Bottle) into the specified (virtualenv), inheriting globally installed modules
-- pip: name=bottle virtualenv=/my_app/venv virtualenv_site_packages=yes
-
-# Install (Bottle) into the specified (virtualenv), using Python 2.7
-- pip: name=bottle virtualenv=/my_app/venv virtualenv_command=virtualenv-2.7
-
-# Install specified python requirements.
-- pip: requirements=/my_app/requirements.txt
-
-# Install specified python requirements in indicated (virtualenv).
-- pip: requirements=/my_app/requirements.txt virtualenv=/my_app/venv
-
-# Install specified python requirements and custom Index URL.
-- pip: requirements=/my_app/requirements.txt extra_args='-i https://example.com/pypi/simple'
-
-# Install (Bottle) for Python 3.3 specifically,using the 'pip-3.3' executable.
-- pip: name=bottle executable=pip-3.3
+# Install (httpie) to it's own virtualenv
+- pyapp: name=httpie state=present
 '''
 
 def _is_present(name, version, installed_pkgs):
