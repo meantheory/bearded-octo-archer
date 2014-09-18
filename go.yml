@@ -12,11 +12,14 @@
       is_dev_environment: True
       zsh_go_to_start: False
       dotfiles_github_repo: "mjs2600/dot_files"
+      python_mkvirtualenv: True
+      python3: True
     roles:
-      - postgres
+      # - postgres
       - zsh
-      - tmate
-      - dotfiles
+      - python-dev
+      # - tmate
+      # - dotfiles
     #   - ruby-dev
     #   - node-dev
 
@@ -25,6 +28,12 @@
     #:>>> SET HOSTNAME
       - name: set host name
         hostname: name=bearded
+
+      - name: install httpie
+        pyapp: name=httpie state=present
+
+      - name: install circus
+        pyapp: name=circus state=present
 
     # #:>>> Python 3
     #   - name: install python3-dev

@@ -1,0 +1,276 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# (c) 2012, Matt Wright <matt@nobien.net>
+#
+# This file is part of Ansible
+#
+# Ansible is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Ansible is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+import tempfile
+import os
+
+DOCUMENTATION = '''
+---
+module: pyapp
+short_description: Install Python Application Inside it's own Virtual Environment 
+description:
+     - "Install Python Application Inside it's own Virtual Environment. To use this module, 
+       the following keys is required: C(name)."
+version_added: "0.01"
+options:
+  name:
+    description:
+      - The name of a Python library to install or the url of the remote package.
+    required: true 
+    default: null
+  version:
+    description:
+      - The version number to install of the Python library specified in the I(name) parameter
+    required: false
+    default: null
+  state:
+    description:
+      - The state of module
+    required: false
+    default: present
+    choices: [ "present", "absent", "latest" ]
+  executable:
+    description:
+      - The explicit executable or a pathname to the executable to be used to
+        run pip for a specific version of Python installed in the system. For
+        example C(pip-3.3), if there are both Python 2.7 and 3.3 installations
+        in the system and you want to run pip for the Python 3.3 installation.
+    version_added: "1.3"
+    required: false
+    default: null
+notes:
+   - Please note that virtualenv (U(http://www.virtualenv.org/)) must be installed on the remote host if the virtualenv parameter is specified.
+requirements: [ "virtualenv", "pip" ]
+author: Matt Wright
+'''
+
+EXAMPLES = '''
+# Install (Bottle) python package.
+- pip: name=bottle
+
+# Install (Bottle) python package on version 0.11.
+- pip: name=bottle version=0.11
+
+# Install (MyApp) using one of the remote protocols (bzr+,hg+,git+,svn+). You do not have to supply '-e' option in extra_args.
+- pip: name='svn+http://myrepo/svn/MyApp#egg=MyApp'
+
+# Install (Bottle) into the specified (virtualenv), inheriting none of the globally installed modules
+- pip: name=bottle virtualenv=/my_app/venv
+
+# Install (Bottle) into the specified (virtualenv), inheriting globally installed modules
+- pip: name=bottle virtualenv=/my_app/venv virtualenv_site_packages=yes
+
+# Install (Bottle) into the specified (virtualenv), using Python 2.7
+- pip: name=bottle virtualenv=/my_app/venv virtualenv_command=virtualenv-2.7
+
+# Install specified python requirements.
+- pip: requirements=/my_app/requirements.txt
+
+# Install specified python requirements in indicated (virtualenv).
+- pip: requirements=/my_app/requirements.txt virtualenv=/my_app/venv
+
+# Install specified python requirements and custom Index URL.
+- pip: requirements=/my_app/requirements.txt extra_args='-i https://example.com/pypi/simple'
+
+# Install (Bottle) for Python 3.3 specifically,using the 'pip-3.3' executable.
+- pip: name=bottle executable=pip-3.3
+'''
+
+def _is_present(name, version, installed_pkgs):
+    for pkg in installed_pkgs:
+        if '==' not in pkg:
+            continue
+
+        [pkg_name, pkg_version] = pkg.split('==')
+
+        if pkg_name == name and (version is None or version == pkg_version):
+            return True
+
+    return False
+
+def _fail(module, cmd, out, err):
+    msg = ''
+    if out:
+        msg += "stdout: %s" % (out, )
+    if err:
+        msg += "\n:stderr: %s" % (err, )
+    module.fail_json(cmd=cmd, msg=msg)
+
+def _scripts(module, d, python):
+    '''
+    Find scripts in bin directory. 
+    '''
+
+    scripts = []
+
+    for filename in os.listdir(d):
+        script = os.path.join(d, filename)
+
+        if filename == 'activate' or filename.startswith('activate.') or filename == 'activate_this.py':
+            continue
+
+        if filename.startswith('easy_install'):
+            continue
+
+        if filename == 'pip' or filename.startswith('pip3'):
+            continue
+
+        if filename == 'python' or filename.startswith('python3'):
+            continue
+
+        with open(script) as f:
+
+            try:
+                header = f.read(75)         
+            except:
+                header = ''
+
+            if header.startswith('#!' + python):
+                scripts.append((filename, script))
+
+    return scripts
+
+def main():
+    state_map = dict(
+        present='install',
+        absent='uninstall -y',
+        latest='install -U',
+    )
+
+    module = AnsibleModule(
+        argument_spec=dict(
+            state=dict(default='present', choices=state_map.keys()),
+            name=dict(default=None, required=True),
+            home=dict(default='/usr/local/pyapp', required=False),
+            destination=dict(default='/usr/local/bin', required=False),
+            version=dict(default=None, required=False, type='str'),
+            executable=dict(default='virtualenv', required=False),
+        ),
+        # required_one_of=[['name', 'requirements']],
+        # mutually_exclusive=[['name', 'requirements']],
+        supports_check_mode=False
+    )
+
+    pyapp_home = module.params['home']
+    virtualenv = module.params['executable']
+    state = module.params['state']
+    name = module.params['name']
+    version = module.params['version']
+    destination = module.params['destination']
+
+    pyapp_python = os.path.join(pyapp_home, name, 'bin', 'python')
+    pyapp_venv_home = os.path.join(pyapp_home, name)
+    pyapp_pip = os.path.join(pyapp_home, name, 'bin', 'pip')
+    pyapp_bin = os.path.join(pyapp_home, name, 'bin')
+
+    # error check latest vs version
+    if state == 'latest' and version is not None:
+        module.fail_json(msg='version is incompatible with state=latest')
+
+    # if state is absent
+    if state == 'absent':
+        #todo: implement the unlinking of scripts and the deletion of the pyapp virtualenv
+        
+        # notes:
+        #  1. unsymlink scripts
+        #  2. rm -rf pyapp_venv_home
+        #  3. rmdir pyapp_home --> only if there are no other virtualenv's inside.
+
+        # for script in os.listdir(destination):
+        #     path = os.path.realpath(script)
+
+        #     if path.startswith(pyapp_bin):
+        #         os.unlink(script)
+
+        module.fail_json(msg='absent is not implemented yet.')
+
+    err = ''
+    out = ''
+    changed = False
+
+    # create pyapp_home
+    if not os.path.exists(pyapp_home):
+        os.mkdir(pyapp_home)
+        out += '\n\nCreated directory: {0}\n\n'.format(pyapp_home)
+        changed = True
+
+
+    # create pyapp_virtualenv
+    if not os.path.exists(os.path.join(pyapp_home, name, 'bin', 'activate')):
+        venvcmd = '{0} {1}'.format(virtualenv, name)
+        rc, out_venv, err_venv = module.run_command(venvcmd, cwd=pyapp_home)
+
+        out += out_venv
+        err += err_venv
+
+        if rc != 0:
+            _fail(module, venvcmd, out, err)
+
+        changed = True
+
+    # find out if py app is present
+    freeze_cmd = '{0} {1}'.format(pyapp_pip, 'freeze')
+    rc, out_freeze, err_freeze = module.run_command(freeze_cmd, cwd=pyapp_home)
+
+    if rc != 0:
+        out += out_freeze
+        err += err_freeze
+        _fail(module, freeze_cmd, out, err)
+
+    is_present = _is_present(name, version, out_freeze.split())
+
+    # install py app to the py app virtualenv
+    if not is_present:
+        install_cmd = '{0} {1} {2}'.format(pyapp_pip, state_map[state], name)
+        rc, out_pip, err_pip = module.run_command(install_cmd, cwd=pyapp_home)
+
+        out += out_pip
+        err += err_pip
+
+        if rc != 0:
+            _fail(module, install_cmd, out, err)
+
+        changed = True
+
+
+    # symlink scripts to /usr/local/bin
+
+    for name, script in _scripts(module, pyapp_bin, pyapp_python):
+        script_dest = os.path.join(destination, name)
+
+        if not os.path.islink(script_dest):
+            os.symlink(script, script_dest)
+
+            changed = True
+
+
+    # bail
+    module.exit_json(changed=changed, name=name, version=version,
+                     state=state,  
+                     destination=destination, executable=virtualenv, 
+                     home=pyapp_home, pyapp_python=pyapp_python, 
+                     pyapp_pip=pyapp_pip, pyapp_bin=pyapp_bin,
+                     stdout=out, stderr=err)
+
+# import module snippets
+from ansible.module_utils.basic import *
+
+main()
